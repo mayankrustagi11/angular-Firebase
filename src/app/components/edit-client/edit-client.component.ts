@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ClientService } from 'src/app/services/client.service';
+import { FlashMessagesService } from 'angular2-flash-messages';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Client } from 'src/app/models/Client';
 
 @Component({
   selector: 'app-edit-client',
@@ -7,9 +11,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditClientComponent implements OnInit {
 
-  constructor() { }
+  id:string;
+  client:Client = {
+    'firstName': '',
+    'lastName': '',
+    'email': '',
+    'key': '',
+    'phone': '',
+    'balance': 0
+  };
+
+  disableBalanceOnEdit:boolean = true;
+
+  constructor(public clientService:ClientService, public router:Router, public route:ActivatedRoute, public flashMessagesService:FlashMessagesService) { }
 
   ngOnInit() {
+    this.id = this.route.snapshot.params['id'];
+    this.clientService.getClient(this.id).subscribe(client => {
+      this.client = client[0];
+    });
+  }
+
+  onSubmit({value, valid}:{value:Client, valid:boolean}) {
+
+    if(!valid) {
+      this.flashMessagesService.show('Please fill in all fields!', {cssClass:'alert-danger', timeout: 4000});
+      this.router.navigate(['edi-client/'+this.id]);
+    } else {
+      this.clientService.updateClient(this.id, value);
+      this.flashMessagesService.show('Client Updated!', {cssClass:'alert-success', timeout: 4000});
+      this.router.navigate(['/client/'+this.id]);
+    }
   }
 
 }

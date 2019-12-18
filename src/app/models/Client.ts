@@ -1,5 +1,5 @@
 export interface Client {
-    $key?:string;
+    key?:string;
     firstName?:string;
     lastName?:string;
     email?:string;
