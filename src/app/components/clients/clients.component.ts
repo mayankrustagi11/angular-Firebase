@@ -12,7 +12,7 @@ export class ClientsComponent implements OnInit {
   clients:any[];
   totalOwed:number;
 
-  constructor(public clientService:ClientService) {}
+  constructor(public clientService:ClientService) { }
 
   ngOnInit() {
     this.clientService.getClients().subscribe(clients => {

@@ -31,7 +31,7 @@ export class ClientService {
   }
 
   updateClient(id:string, client:Client) {
-    return this.afs.collection<Client>('clients').doc(id).set(client, {merge:true});
+    return this.afs.collection<Client>('clients').doc(id).update(client);
   }
 
   deleteClient(id:string) {

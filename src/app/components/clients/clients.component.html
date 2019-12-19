@@ -4,7 +4,7 @@
     </div>
     <div class="col-md-6">
         <h5 class="pull-right text-muted">
-            Total Owed: {{totalOwed | currency:"USD":true}}
+            Total Owed: {{totalOwed | currency:"USD":"symbol"}}
         </h5>
     </div>
 </div>
@@ -24,8 +24,8 @@
             <td>{{client.key}}</td>
             <td>{{client.firstName}} {{client.lastName}}</td>
             <td>{{client.email}}</td>
-            <td>{{client.balance | currency:"USD":true}}</td>
-            <td><a href="#" [routerLink]="['/client/'+client.key]" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-circle-o-right"></i> Details</a></td>
+            <td>{{client.balance | currency:"USD":"symbol"}}</td>
+            <td><a [routerLink]="['/client/'+client.key]" class="btn btn-secondary btn-sm"><i class="fa fa-arrow-circle-o-right"></i> Details</a></td>
         </tr>
     </tbody>
 
