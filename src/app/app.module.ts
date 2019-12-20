@@ -53,7 +53,8 @@ const appRoutes:Routes = [
     LoginComponent,
     RegisterComponent,
     SettingsComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
