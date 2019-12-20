@@ -17,7 +17,6 @@ export class EditClientComponent implements OnInit {
     'firstName': '',
     'lastName': '',
     'email': '',
-    'key': '',
     'phone': '',
     'balance': 0
   };
@@ -29,9 +28,8 @@ export class EditClientComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.clientService.getClient(this.id).subscribe(client => {
-      this.client = client[0];
+      this.client = client.data();
     });
-
     this.disableBalanceOnEdit = this.settingsService.getSettings().disableBalanceOnEdit;
   }
 

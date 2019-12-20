@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Client } from 'src/app/models/Client';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,18 @@ export class ClientService {
 
   clientsCollection: AngularFirestoreCollection<Client>;
   clients: Observable<Client[]>;
+  clientDoc: AngularFirestoreDocument<Client>;
 
   constructor(public afs:AngularFirestore) { 
-    this.clientsCollection = afs.collection<Client>('clients');
-    this.clients = this.clientsCollection.valueChanges();
+
+    this.clientsCollection = this.afs.collection<Client>('clients', ref => ref.orderBy('firstName', 'asc'));
+    this.clients = this.clientsCollection.snapshotChanges().pipe(map(changes => {
+      return changes.map(a => {
+        const data = a.payload.doc.data() as Client;
+        data.key = a.payload.doc.id;
+        return data;
+      });
+    }));
   }
 
   getClients() {
@@ -25,16 +34,15 @@ export class ClientService {
   }
 
   getClient(id:string) {
-    this.clientsCollection = this.afs.collection<Client>('clients', ref => ref.where('key', '==', id));
-    this.clients = this.clientsCollection.valueChanges();
-    return this.clients;
+    return this.afs.collection<Client>('clients').doc(id).get()
+
   }
 
   updateClient(id:string, client:Client) {
-    return this.afs.collection<Client>('clients').doc(id).update(client);
+    return this.afs.doc(`clients/${id}`).update(client);
   }
 
   deleteClient(id:string) {
-    return this.afs.collection<Client>('clients').doc(id).delete();
+    return this.afs.doc(`clients/${id}`).delete();
   }
 }
